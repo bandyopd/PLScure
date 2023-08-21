@@ -13,13 +13,13 @@ PLScure (which stands for <ins>**Partly Linear Single-Index cure**</ins> model) 
 The package contains 2 functions:
 |Functions  | Description|
 |------------- | -------------|
-RCPsurvSIM  | Generate a data set according to the simulation study in Lee and Wong. (2023+)
-RCPsurvEST  | Perform the semiparametric estimation methods of Lee and Wong. (2023+)
+PLScureSIM  | Generate a data set according to the simulation study in Lee et al. (2023+)
+PLScureEST  | Perform the semiparametric estimation methods of Lee et al. (2023+)
 
 <ins>**RCPsurvSIM**</ins>
 
 ```
-RCPsurvSIM(seed=NA, n, gamma, beta, alpha1, alpha2, mu, sigma)
+PLScureSIM(seed=NA, n, gamma, beta, alpha1, alpha2, mu, sigma)
 ```
 This function generates a data set according to the model under scenario I of the simulation study in Lee and Wong (2023+) that takes the arguments:
 >- `n` is the sample size
@@ -54,7 +54,7 @@ This data structure is as follows:
 <ins>**RCPsurvEST**</ins>
 
 ```
-RCPsurvEST(data, P, m=10, tolerance=10^{-3}, gamma0=NA, beta0=NA, alpha10=NA, alpha20=NA, mu0=NA, sigma0=NA, TRACE=FALSE)
+PLScureEST(data, P, m=10, tolerance=10^{-3}, gamma0=NA, beta0=NA, alpha10=NA, alpha20=NA, mu0=NA, sigma0=NA, TRACE=FALSE)
 ```
 This function performs the semiparametric estimation methods of Lee and Wong (2023+). The details of the arguments are as follows:
 >- `data` is a data.frame object shown in the above, with columns `id`, `Ti`, `cen`, `X[1]`,...,`X[P]`, `Z`
