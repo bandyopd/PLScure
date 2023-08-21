@@ -1,11 +1,11 @@
 # PLScure
 
-RCPsurv (which stands for <ins>**Random**</ins> <ins>**Change-Point**</ins> for <ins>**surv**</ins>ival outcome) is a package that performs semiparametric estimation and inference for right-censored data with a random change-point using the method proposed by Lee and Wong (2023+).
+PLScure (which stands for <ins>**Partly Linear Single-Index cure**</ins> model) is a package that performs semiparametric estimation and inference for right-censored data using the method proposed by Lee et al. (2023+).
 
 # How to import the Functions #
 > install.packages("devtools")<br />
 > library(devtools) <br /> 
-> source_url("https://github.com/lcyjames/RCPsurv/blob/73b2b72df2abc89c62ed1618bfe11186524c8749/RCPsurv.R?raw=TRUE")
+> source_url("...?raw=TRUE")
 
 
 
@@ -122,4 +122,4 @@ Result
 Lee Chun Yin, James <<james-chun-yin.lee@polyu.edu.hk>>
 
 # Reference #
-Lee, C. Y.,& Wong, K. Y. (2023+). Survival analysis with a random change-point. Statistical Methods in Medical Research [online], DOI: [10.1177/09622802231192946](https://doi.org/10.1177/09622802231192946).
+Lee, C. Y., Wong, K. Y., &Bandyopadhyay D. (2023+). Partly-linear single-index cure models with a nonparametric incidence link function. (Under review)
