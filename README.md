@@ -15,7 +15,7 @@ The package contains 2 functions:
 |Functions  | Description|
 |------------- | -------------|
 PLScureSIM  | Generate a data set according to the simulation study in Lee et al. (2023+)
-PLScureEST  | Perform the hybrid nonparametric estimation methods of Lee et al. (2023+)
+PLScureEST  | Perform the semiparametric estimation methods of Lee et al. (2023+)
 
 <ins>**PLScureSIM**</ins>
 
@@ -33,6 +33,7 @@ This function generates a data set according to the model under scenario I of th
 
 Example:
 ```
+#This is the setting in Scenario I
 data <- PLScureSIM(seed = 1234, n = 500, gamma = 0.5, beta = -1, alpha1 = 2, alpha2 = 1.5, mu = 1.5, sigma = 0.5)
 head(data)
 
