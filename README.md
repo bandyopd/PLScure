@@ -15,12 +15,12 @@ The package contains 2 functions:
 |Functions  | Description|
 |------------- | -------------|
 PLScureSIM  | Generate a data set according to the simulation study in Lee et al. (2023+)
-PLScureEST  | Perform the semiparametric estimation methods of Lee et al. (2023+)
+PLScureEST  | Perform the hybrid nonparametric estimation methods of Lee et al. (2023+)
 
-<ins>**RCPsurvSIM**</ins>
+<ins>**PLScureSIM**</ins>
 
 ```
-PLScureSIM(seed=NA, n, gamma, beta, alpha1, alpha2, mu, sigma)
+PLScureSIM(seed=NA, n, alpha, beta, gamma, scen=1)
 ```
 This function generates a data set according to the model under scenario I of the simulation study in Lee and Wong (2023+) that takes the arguments:
 >- `n` is the sample size
@@ -33,7 +33,7 @@ This function generates a data set according to the model under scenario I of th
 
 Example:
 ```
-data <- RCPsurvSIM(seed = 1234, n = 500, gamma = 0.5, beta = -1, alpha1 = 2, alpha2 = 1.5, mu = 1.5, sigma = 0.5)
+data <- PLScureSIM(seed = 1234, n = 500, gamma = 0.5, beta = -1, alpha1 = 2, alpha2 = 1.5, mu = 1.5, sigma = 0.5)
 head(data)
 
 #   id Ti           cen X           Z
@@ -72,7 +72,7 @@ This function performs the semiparametric estimation methods of Lee and Wong (20
 
 Example:
 ```
-Dataset<-RCPsurvSIM(seed = 1234, n = 500, gamma = 0.5, beta = -1, alpha1 = 2, alpha2 = 1.5, mu = 1.5, sigma = 0.5)
+Dataset<-PLScureSIM(seed = 1234, n = 500, gamma = 0.5, beta = -1, alpha1 = 2, alpha2 = 1.5, mu = 1.5, sigma = 0.5)
 Result <-RCPsurvEST(data = Dataset, P = 1, gamma0 = 0.5, beta0 = -1, alpha10 = 2, alpha20 = 1.5, mu0 = 1.5, sigma0 = 0.5,TRACE = F)
 Result
 
