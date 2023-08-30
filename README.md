@@ -1,5 +1,4 @@
 # PLScure
-
 PLScure (which stands for <ins>**Partly Linear Single-Index cure**</ins> models with a
 nonparametric incidence link function) is a package that performs semiparametric estimation and inference for right-censored data using the method proposed by Lee et al. (2023+).
 
@@ -7,8 +6,6 @@ nonparametric incidence link function) is a package that performs semiparametric
 > install.packages("devtools")<br />
 > library(devtools) <br /> 
 > source_url("...?raw=TRUE")
-
-
 
 # Usage #
 The package contains 2 functions:
@@ -18,18 +15,15 @@ PLScureSIM  | Generate a data set according to the simulation study in Lee et al
 PLScureEST  | Perform the semiparametric estimation methods of Lee et al. (2023+)
 
 <ins>**PLScureSIM**</ins>
-
 ```
 PLScureSIM(seed=NA, n, alpha, beta, gamma, scen=1)
 ```
-This function generates a data set according to the model under scenario I of the simulation study in Lee and Wong (2023+) that takes the arguments:
+This function generates a data set according to the model under scenario I of the simulation study in Lee et al. (2023+) that takes the arguments:
 >- `n` is the sample size
->- `gamma` is the coefficient of X
+>- `alpha` is the coefficient of X in the incidence component
 >- `beta` is the 'baseline' coefficient of Z
->- `alpha1` is an intercept added to the regression when Z is greater than the random change-point
->- `alpha2` is the coefficient of Z added to the regression when Z is greater than the random change-point
->- `mu` is the mean of the change-point distribution
->- `sigma` is the standard deviation of the change-point distribution
+>- `gamma` is an intercept added to the regression when Z is greater than the random change-point
+>- `scen` is the setting used in the scenarios in the simulation study, which takes the values 1, 2 or 3 corresponding to Scenarios I, II and III.
 
 Example:
 ```
