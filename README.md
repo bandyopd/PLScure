@@ -16,38 +16,37 @@ PLScureEST  | Perform the semiparametric estimation methods of Lee et al. (2023+
 
 <ins>**PLScureSIM**</ins>
 ```
-PLScureSIM(seed=NA, n, alpha, beta, gamma, scen=1)
+PLScureSIM(seed=NA, n, alpha, beta, gamma, scen)
 ```
-This function generates a data set according to the model under scenario I of the simulation study in Lee et al. (2023+) that takes the arguments:
+This function generates a data set according to the model of the simulation study in Lee et al. (2023+) that takes the arguments:
 >- `n` is the sample size
->- `alpha` is the coefficient of X in the incidence component
->- `beta` is the 'baseline' coefficient of Z
->- `gamma` is an intercept added to the regression when Z is greater than the random change-point
->- `scen` is the setting used in the scenarios in the simulation study, which takes the values 1, 2 or 3 corresponding to Scenarios I, II and III.
+>- `alpha` is the regression coefficients of X in the incidence component. If the norm of this vector is not equal to 1, then the vector will be normalized to norm 1.
+>- `beta` is the regression coefficients of W
+>- `gamma` is the regression coefficients of Z in the latency component. If the norm of this vector is not equal to 1, then the vector will be normalized to norm 1.
+>- `scen` is the setting used in the scenarios in the simulation study, which takes the values 1, 2, or 3 corresponding to Scenarios I, II, and III.
 
 Example:
 ```
-#This is the setting in Scenario I
-data <- PLScureSIM(seed = 1234, n = 500, gamma = 0.5, beta = -1, alpha1 = 2, alpha2 = 1.5, mu = 1.5, sigma = 0.5)
-head(data)
+#This is the setting in Scenario II
+Data <- PLScureSIM(seed = 1234, n = 500, alpha = c(1,-1,1), beta = 0.5, gamma = c(1,-1), scen=2)
+head(Data)
 
-#   id Ti           cen X           Z
-# 1  1 0.004496932   0  1.334176034 1.435799
-# 2  2 0.015786129   1 -1.121502497 3.819158
-# 3  3 0.026820595   1  1.674326510 3.091647
-# 4  4 0.026929615   0 -0.005234058 0.540405
-# 5  5 0.030748594   1  0.011925135 3.015005
-# 6  6 0.039647808   1  0.129085401 3.971592
+#  id         Yi cen         X1         X2         X3 cure
+#1  1 8.71373045   0 -1.2070657  0.2774292  1.0844412    1
+#2  2 1.50105375   1  0.5060559 -0.5747400 -0.5466319    0
+#3  3 0.13600808   1 -0.7315360 -0.5166697 -1.7507334    0
+#4  4 1.12204120   1  0.9594941 -0.1102855 -0.5110095    0
+#5  5 1.05116810   1 -0.6470190  0.8681809  0.3756356    0
+#6  6 0.04545912   0  0.4595894 -0.6937202 -1.4482049    0
 ```
 
 This data structure is as follows:
 >- `id` is the sample identifier
->- `Ti` is the exact failure time or censoring time
+>- `Yi` is the exact failure time or censoring time
 >- `cen` is the right-censoring indicator
->- `X` is the non-change-point covariate, which can have multiple columns
->- `Z` is the univariate change-point variable
+>- `X1`, `X2`, and `X3` are the covariates, where each of them follows a standard normal distribution
 
-<ins>**RCPsurvEST**</ins>
+<ins>**PLScureEST**</ins>
 
 ```
 PLScureEST(data, P, m=10, tolerance=10^{-3}, gamma0=NA, beta0=NA, alpha10=NA, alpha20=NA, mu0=NA, sigma0=NA, TRACE=FALSE)
