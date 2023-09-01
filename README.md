@@ -44,7 +44,7 @@ This data structure is as follows:
 >- `id` is the sample identifier
 >- `Yi` is the exact failure time or censoring time
 >- `cen` is the right-censoring indicator
->- `X1`, `X2`, and `X3` are the covariates, where each of them follows a standard normal distribution.
+>- `X1`, `X2`, and `X3` are the covariates, where each of them follows a standard normal distribution
 >- `X1` is included in X and W
 >- `X2` and `X3` are included in X and Z
 
