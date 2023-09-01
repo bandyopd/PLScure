@@ -20,9 +20,9 @@ PLScureSIM(seed=NA, n, alpha, beta, gamma, scen)
 ```
 This function generates a data set according to the model of the simulation study in Lee et al. (2023+) that takes the arguments:
 >- `n` is the sample size
->- `alpha` is the regression coefficient of X in the incidence component. If the norm of this vector is not equal to 1, then the vector will be normalized to norm 1.
+>- `alpha` is the regression coefficient of X in the incidence component. If the Euclidean norm of this vector is not equal to 1, then the vector will be rescaled to norm 1.
 >- `beta` is the regression coefficient of W
->- `gamma` is the regression coefficient of Z in the latency component. If the norm of this vector is not equal to 1, then the vector will be normalized to norm 1.
+>- `gamma` is the regression coefficient of Z in the latency component. If the Euclidean norm of this vector is not equal to 1, then the vector will be rescaled to norm 1.
 >- `scen` is the setting used in the scenarios in the simulation study, which takes the values 1, 2, or 3 referring to Scenarios I, II, and III.
 
 Example:
