@@ -47,7 +47,7 @@ This data structure is as follows:
 >- `X1`, `X2`, and `X3` are the covariates, where each of them follows a standard normal distribution
 >- `X1` is included in X and W
 >- `X2` and `X3` are included in X and Z
->- `cure' is the cure indicator, which is unobservable in real data analysis, hence not an input in the estimation function
+>- `cure` is the cure indicator, which is unobservable in real data analysis, hence not an input in the estimation function
 
 <ins>**PLScureEST**</ins>
 
