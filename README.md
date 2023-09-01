@@ -51,7 +51,7 @@ This data structure is as follows:
 <ins>**PLScureEST**</ins>
 
 ```
-PLScureEST(data, P, m=10, tolerance=10^{-3}, gamma0=NA, beta0=NA, alpha10=NA, alpha20=NA, mu0=NA, sigma0=NA, TRACE=FALSE)
+PLScureEST(X, W, Z, Yi, cen, C1=3, C2=3, M2=1:5, tol=10^{-4}, attempt=10, SE_est=TRUE)
 ```
 This function performs the semiparametric estimation methods of Lee and Wong (2023+). The details of the arguments are as follows:
 >- `data` is a data.frame object shown in the above, with columns `id`, `Ti`, `cen`, `X[1]`,...,`X[P]`, `Z`
