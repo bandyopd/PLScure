@@ -20,9 +20,9 @@ PLScureSIM(seed=NA, n, alpha, beta, gamma, scen)
 ```
 This function generates a data set according to the model of the simulation study in Lee et al. (2023+) that takes the arguments:
 >- `n` is the sample size
->- `alpha` is the regression coefficients of X in the incidence component. If the norm of this vector is not equal to 1, then the vector will be normalized to norm 1.
->- `beta` is the regression coefficients of W
->- `gamma` is the regression coefficients of Z in the latency component. If the norm of this vector is not equal to 1, then the vector will be normalized to norm 1.
+>- `alpha` is the regression coefficient of X in the incidence component. If the norm of this vector is not equal to 1, then the vector will be normalized to norm 1.
+>- `beta` is the regression coefficient of W
+>- `gamma` is the regression coefficient of Z in the latency component. If the norm of this vector is not equal to 1, then the vector will be normalized to norm 1.
 >- `scen` is the setting used in the scenarios in the simulation study, which takes the values 1, 2, or 3 corresponding to Scenarios I, II, and III.
 
 Example:
@@ -44,7 +44,9 @@ This data structure is as follows:
 >- `id` is the sample identifier
 >- `Yi` is the exact failure time or censoring time
 >- `cen` is the right-censoring indicator
->- `X1`, `X2`, and `X3` are the covariates, where each of them follows a standard normal distribution
+>- `X1`, `X2`, and `X3` are the covariates, where each of them follows a standard normal distribution.
+>- `X1` is included in X and W
+>- `X2` and `X3` are included in X and Z
 
 <ins>**PLScureEST**</ins>
 
