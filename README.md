@@ -69,51 +69,71 @@ This function performs the semiparametric estimation methods of Lee and Wong (20
 
 Example:
 ```
-Dataset<-PLScureSIM(seed = 1234, n = 500, gamma = 0.5, beta = -1, alpha1 = 2, alpha2 = 1.5, mu = 1.5, sigma = 0.5)
-Result <-RCPsurvEST(data = Dataset, P = 1, gamma0 = 0.5, beta0 = -1, alpha10 = 2, alpha20 = 1.5, mu0 = 1.5, sigma0 = 0.5,TRACE = F)
+Data <- PLScureSIM(seed = 1234, n = 500, alpha = c(1,-1,1), beta = 0.5, gamma = c(1,-1), scen=2)
+Result <- PLScureEST(X = cbind(Data$X1,Data$X2,Data$X3), W=Data$X1, Z=cbind(Data$X2,Data$X3), Yi = Data$Yi, cen = Data$cen, C1 = 3, C2 = 3, M2 = 1:5, tol = 10^{-4}, attempt = 10, SE_est = TRUE)
 Result
 
-# $loglik
-# [1] -2456.817
+# $summary
+# coef estimate    SE CI.left CI.right
+# 1 alpha1    0.622 0.051   0.522    0.721
+# 2 alpha2   -0.654 0.062  -0.774   -0.533
+# 3 alpha3    0.431 0.067   0.300    0.563
+# 4  beta1    0.448 0.079   0.294    0.602
+# 5 gamma1    0.773 0.050   0.674    0.871
+# 6 gamma2   -0.635 0.061  -0.755   -0.515
 # 
-# $gamma.hat
-# [1] 0.4504628
+# $alpha
+# [1]  0.6219258 -0.6535611  0.4313539
 # 
-# $beta.hat
-# [1] -0.788148
+# $alpha.se
+# [1] 0.05076201 0.06162275 0.06698572
 # 
-# $alpha1.hat
-# [1] 1.751743
+# $beta
+# [1] 0.4479409
 # 
-# $alpha2.hat
-# [1] 1.418709
+# $beta.se
+# [1] 0.07863164
 # 
-# $mu.hat
-# [1] 1.603879
+# $gamma
+# [1]  0.7725484 -0.6349559
 # 
-# $sigma.hat
-# [1] 0.3963745
+# $gamma.se
+# [1] 0.05025599 0.06114628
 # 
-# $gamma.hat.se
-# [1] 0.06527598
+# $psi
+# [1]  -4.2359447  -4.2156966  -0.2848389  -0.2839586  -0.2837657  -0.2836702  -0.2835927  -0.2834988  -0.2833435  -0.2829049
+# [11]  -0.2811348  -0.2212790 564.8488788
 # 
-# $beta.hat.se
-# [1] 0.205753
+# $phi
+# [1]  2.766668  4.839309 -7.565144  5.079797  2.947774
 # 
-# $alpha1.hat.se
-# [1] 0.2864374
+# $m10.star
+# [1] 12
 # 
-# $alpha2.hat.se
-# [1] 0.2920645
+# $m20.star
+# [1] 4
 # 
-# $mu.hat.se
-# [1] 0.1028265
+# $Xmax
+# 100% 
+# 3.660898 
 # 
-# $sigma.hat.se
-# [1] 0.08603625
+# $Zmax
+# 100% 
+# 3.387188 
 # 
-# $conv
-# [1] 0
+# $likelihood
+# [1] -1507.07
+# 
+# $AIC
+# [1] 3062.14
+# 
+# $AIC.by.m10.m20
+# m10 m20      AIC
+# 1  12   1 3132.882
+# 2  12   2 3094.603
+# 3  12   3 3062.007
+# 4  12   4 3058.140
+# 5  12   5 3061.094
 ```
 
 # Contact #
