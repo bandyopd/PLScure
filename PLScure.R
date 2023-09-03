@@ -12,9 +12,9 @@ PLScureSIM<-function(seed=NA,n,alpha,beta,gamma,scen=1){
   gamma_norm<-sqrt(sum(gamma^2))
   balpha<-alpha/alpha_norm
   bgamma<-gamma/gamma_norm
-
+  
   data<-NULL
-
+  
   for(i in c(1:n)){
     X1<-rnorm(n = 1,mean = 0,sd = 1)
     X2<-rnorm(n = 1,mean = 0,sd = 1)
@@ -44,12 +44,12 @@ PLScureSIM<-function(seed=NA,n,alpha,beta,gamma,scen=1){
     }
     
     Yi<-min(Ti,Ci)
-    deltai<-ifelse(Ti<=Ci,1,0)
+    cen<-ifelse(Ti<=Ci,1,0)
     
-    data<-rbind(data,c(i,Yi,deltai,XX,cure))
+    data<-rbind(data,c(i,Yi,cen,XX,cure))
   }
   data<-data.frame(data)
-  names(data)<-c("id","Yi","deltai","X1","X2","X3","cure")
+  names(data)<-c("id","Yi","cen","X1","X2","X3","cure")
   return(data)
 }
 
@@ -330,7 +330,7 @@ EM<-function(psi.d, phi.d, cumhaz.d, alpha.d, beta.d, gamma.d, p, q, r, X, W, Z,
           td<-td+1
           if((max(abs(c(gamma.d-gamma.dummy1, c2.d-c2.dummy1)))<10^{-4})|td==100){break}
         }
-
+        
         if(gamma.d[1]<0){
           gamma.d <- (-gamma.d)
           phi.d <- rev(phi.d)
@@ -344,20 +344,21 @@ EM<-function(psi.d, phi.d, cumhaz.d, alpha.d, beta.d, gamma.d, p, q, r, X, W, Z,
                    X = X,W = W,Z = Z,m10 = m10,m20 = m20, p=p,q=q,r=r,
                    Xmin = Xmin, Xmax = Xmax, Zmin= Zmin, Zmax = Zmax, cen = cen, Yi=Yi, maxT=maxT)
     
+    if(tb==100|td==100){conv<-1;break}
     if(dist<tol){conv<-0;break}
-    if((NPupdate==FALSE)&(times>1000)){conv<-0;break}
-    if((NPupdate==TRUE)&(times>100)){conv<-0;break}
+    if((NPupdate==FALSE)&(times>100)){conv<-0;break}
+    if((NPupdate==TRUE)&(times>50)){conv<-0;break}
   }
   return(list(like=like,times=times,cumhaz.h=cumhaz.d, psi.h=psi.d, phi.h=phi.d, alpha.h=alpha.d, beta.h=beta.d, gamma.h=gamma.d,conv=conv))
 }
 
-PLScureEST<-function(X,W,Z,Yi,cen,C1=3,C2=3,M2=1:8,tol=10^{-4},attempt=1,SE_est=TRUE){
+PLScureEST<-function(X,W,Z,Yi,cen,C1=3,C2=3,M2=1:5,tol=10^{-4},attempt=1,SE_est=TRUE,TRACE=FALSE){
   M1<-C1*floor(length(cen)^{1/4})
   
   X<-data.frame(scale(X))
   W<-data.frame(scale(W))
   Z<-data.frame(scale(Z))
-
+  
   ascd<-order(Yi)
   X<-as.matrix(as.matrix(X)[ascd,])
   W<-as.matrix(as.matrix(W)[ascd,])
@@ -385,7 +386,8 @@ PLScureEST<-function(X,W,Z,Yi,cen,C1=3,C2=3,M2=1:8,tol=10^{-4},attempt=1,SE_est=
     for(m20 in M2){
       l<-S<-0; discard<-0
       repeat{
-        print(paste0("m10: ", m10,", m20: ", m20, ", attempt: ", S+1))
+        #start_time <- Sys.time()
+        if(TRACE==TRUE){print(paste0("m10: ", m10,", m20: ", m20, ", Attempt: ", S+1))}
         set.seed(m10*100+m20*10+l)
         N_a<-rnorm(n = p,0,1)
         N_g<-rnorm(n = r,0,1); N_g[1]<-abs(N_g[1])
@@ -398,8 +400,8 @@ PLScureEST<-function(X,W,Z,Yi,cen,C1=3,C2=3,M2=1:8,tol=10^{-4},attempt=1,SE_est=
         psi0 <-optim(par = rep(0,m10+1),fn = ini.psi, m10=m10, method = "BFGS",SI1.scaled=SI.ini,control = list(reltol=10^{-4},maxit=1000))$par
         
         EMstore<-EM(psi.d = psi0, phi.d = rep(0,m20+1), cumhaz.d = cumsum(ifelse(cen==1,1/sum(cen),0)), alpha.d = true.alpha,
-                    beta.d = true.beta, gamma.d = true.gamma, p = p, q = q, r = r,X = X,W = W,Z = Z,m10 = m10,m20 = m20, n=n,
-                    Rset=Rset, Xmin = Xmin,Xmax = Xmax,Zmin = Zmin,Zmax = Zmax,cen = cen,Yi = Yi,maxT = maxT, NPupdate=FALSE, tol=tol)
+                    beta.d = true.beta, gamma.d = true.gamma, p = p, q = q, r = r, X = X, W = W, Z = Z, m10 = m10, m20 = m20, n=n,
+                    Rset=Rset, Xmin = Xmin, Xmax = Xmax, Zmin = Zmin, Zmax = Zmax, cen = cen,Yi = Yi, maxT = maxT, NPupdate=FALSE, tol=tol)
         
         aa<-c(m10,m20,S,sum(EMstore$like),
               EMstore$times,EMstore$cumhaz.h,EMstore$psi.h,rep(NA,max(M1)-m10),EMstore$phi.h,rep(NA,max(M2)-m20),
@@ -409,6 +411,7 @@ PLScureEST<-function(X,W,Z,Yi,cen,C1=3,C2=3,M2=1:8,tol=10^{-4},attempt=1,SE_est=
         if(EMstore$conv==0){
           store.full<-rbind(store.full,c(aa,discard))
           S<-S+1
+          #print(floor(Sys.time()-start_time))
         }
         l<-l+1
         if(S==attempt){break}
@@ -516,11 +519,9 @@ PLScureEST<-function(X,W,Z,Yi,cen,C1=3,C2=3,M2=1:8,tol=10^{-4},attempt=1,SE_est=
     return(list(summary=results, alpha=as.numeric(alpha.d), alpha.se=as.numeric(SE.vector[1:p]), 
                 beta=as.numeric(beta.d), beta.se=as.numeric(SE.vector[(p+1):(p+q)]),
                 gamma=as.numeric(gamma.d), gamma.se=as.numeric(SE.vector[(p+q+1):(p+q+r)]),
+                psi=c(psi.d[1],psi.d[1]+cumsum(exp(psi.d[2:(m10+1)]))), phi=phi.d,
                 m10.star=m10, m20.star=m20, Xmax=Xmax, Zmax=Zmax,
                 likelihood=like.star, AIC=-2*like.star+2*(length(point.Euclidean)+m10+m20+2),
                 AIC.by.m10.m20=ddply(store.case,m10~m20,summarize,AIC=min(AICs)) ))
   }
 }
-
-
-
