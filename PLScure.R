@@ -108,6 +108,7 @@ Q3_beta_phi<-function(par, q, m20, W, n, Eu, Nd, cumhaz.d, SI2.scaled, Rset){
 
 EM<-function(psi.d, phi.d, cumhaz.d, alpha.d, beta.d, gamma.d, p, q, r, X, W, Z, m10, m20, Xmin, Xmax, Zmin, Zmax, 
              n, Rset, cen, Yi, maxT, NPupdate, tol){
+  conv<-999
   c1.d<-0
   c2.d<-0
   times<-0
@@ -188,8 +189,9 @@ EM<-function(psi.d, phi.d, cumhaz.d, alpha.d, beta.d, gamma.d, p, q, r, X, W, Z,
         tb<-tb+1
         if((max(abs(c(alpha.d-alpha.dummy1, c1.d-c1.dummy1)))<10^{-4})|tb==100){break}
       }
+      if(tb==100){conv<-1}
     }
-
+    
     Bk<-matrix(0,nrow = n,ncol = (m20+1))
     for(i in c(1:n)){
       for(j in c(1:(m20+1))){
@@ -231,7 +233,7 @@ EM<-function(psi.d, phi.d, cumhaz.d, alpha.d, beta.d, gamma.d, p, q, r, X, W, Z,
                             cumhaz.d=cumhaz.d, SI2.scaled=SI2.scaled, Rset=Rset)
     
     if(NPupdate==FALSE){
-      if((sum(is.finite(dLp2))!=length(dLp2))|(sum(is.finite(c(dLp_beta,dLp_phi)))!=length(c(dLp_beta,dLp_phi)))){conv<-1;break}
+      if((sum(is.finite(dLp2))!=length(dLp2))|(sum(is.finite(c(dLp_beta,dLp_phi)))!=length(c(dLp_beta,dLp_phi)))){conv<-1}else{
       beta_phi_inc<-as.numeric(ginv(dLp2)%*%(c(dLp_beta,dLp_phi)))
       K<-0
       repeat{
@@ -249,7 +251,7 @@ EM<-function(psi.d, phi.d, cumhaz.d, alpha.d, beta.d, gamma.d, p, q, r, X, W, Z,
         }
         K<-K+1
       }
-    }else{
+    }}else{
       phi_inc<-as.numeric(ginv(dLp2[(q+1):(q+m20+1),(q+1):(q+m20+1)])%*%(c(dLp_phi)))
       K<-0
       repeat{
@@ -335,7 +337,9 @@ EM<-function(psi.d, phi.d, cumhaz.d, alpha.d, beta.d, gamma.d, p, q, r, X, W, Z,
           gamma.d <- (-gamma.d)
           phi.d <- rev(phi.d)
         }
-      }}
+        if(td==100){conv<-1}
+      }
+    }
     
     dist<-max(abs(c(psi.d-psi.dummy, phi.d-phi.dummy, alpha.d-alpha.dummy, beta.d-beta.dummy, gamma.d-gamma.dummy)))
     
@@ -344,10 +348,10 @@ EM<-function(psi.d, phi.d, cumhaz.d, alpha.d, beta.d, gamma.d, p, q, r, X, W, Z,
                    X = X,W = W,Z = Z,m10 = m10,m20 = m20, p=p,q=q,r=r,
                    Xmin = Xmin, Xmax = Xmax, Zmin= Zmin, Zmax = Zmax, cen = cen, Yi=Yi, maxT=maxT)
     
-    if(tb==100|td==100){conv<-1;break}
+    if(conv==1){break}
     if(dist<tol){conv<-0;break}
     if((NPupdate==FALSE)&(times>100)){conv<-0;break}
-    if((NPupdate==TRUE)&(times>50)){conv<-0;break}
+    if((NPupdate==TRUE)&(times>100)){conv<-0;break}
   }
   return(list(like=like,times=times,cumhaz.h=cumhaz.d, psi.h=psi.d, phi.h=phi.d, alpha.h=alpha.d, beta.h=beta.d, gamma.h=gamma.d,conv=conv))
 }
