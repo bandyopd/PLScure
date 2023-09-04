@@ -234,40 +234,40 @@ EM<-function(psi.d, phi.d, cumhaz.d, alpha.d, beta.d, gamma.d, p, q, r, X, W, Z,
     
     if(NPupdate==FALSE){
       if((sum(is.finite(dLp2))!=length(dLp2))|(sum(is.finite(c(dLp_beta,dLp_phi)))!=length(c(dLp_beta,dLp_phi)))){conv<-1}else{
-      beta_phi_inc<-as.numeric(ginv(dLp2)%*%(c(dLp_beta,dLp_phi)))
-      K<-0
-      repeat{
-        beta_phi_test<-as.numeric(c(beta.d, phi.d)-2^{-K}*beta_phi_inc)
-        beta_test<-beta_phi_test[1:q]
-        phi_test <-beta_phi_test[(q+1):(q+1+m20)]-BP_H(para=beta_phi_test[(q+1):(q+1+m20)],m20 = m20,z.scaled = 0.5)
-        
-        new.Q3<-Q3_beta_phi(par = c(beta_test,phi_test), q=q, W=W, m20=m20, n=n, Eu=Eu, Nd=Nd,  
-                            cumhaz.d=cumhaz.d, SI2.scaled=SI2.scaled, Rset=Rset)
-        
-        if((is.finite(new.Q3)&(new.Q3>=current.Q3))|K>100){
-          beta.d <-beta_test
-          phi.d  <-phi_test
-          break
+        beta_phi_inc<-as.numeric(ginv(dLp2)%*%(c(dLp_beta,dLp_phi)))
+        K<-0
+        repeat{
+          beta_phi_test<-as.numeric(c(beta.d, phi.d)-2^{-K}*beta_phi_inc)
+          beta_test<-beta_phi_test[1:q]
+          phi_test <-beta_phi_test[(q+1):(q+1+m20)]-BP_H(para=beta_phi_test[(q+1):(q+1+m20)],m20 = m20,z.scaled = 0.5)
+          
+          new.Q3<-Q3_beta_phi(par = c(beta_test,phi_test), q=q, W=W, m20=m20, n=n, Eu=Eu, Nd=Nd,  
+                              cumhaz.d=cumhaz.d, SI2.scaled=SI2.scaled, Rset=Rset)
+          
+          if((is.finite(new.Q3)&(new.Q3>=current.Q3))|K>100){
+            beta.d <-beta_test
+            phi.d  <-phi_test
+            break
+          }
+          K<-K+1
         }
-        K<-K+1
-      }
-    }}else{
-      phi_inc<-as.numeric(ginv(dLp2[(q+1):(q+m20+1),(q+1):(q+m20+1)])%*%(c(dLp_phi)))
-      K<-0
-      repeat{
-        phi_test0<-as.numeric(phi.d-2^{-K}*phi_inc)
-        phi_test <-phi_test0-BP_H(para=phi_test0,m20 = m20,z.scaled = 0.5)
-        
-        new.Q3<-Q3_beta_phi(par = c(beta.d,phi_test), q=q, W=W, m20=m20, n=n, Eu=Eu, Nd=Nd, 
-                            cumhaz.d=cumhaz.d, SI2.scaled=SI2.scaled, Rset=Rset)
-        
-        if((is.finite(new.Q3)&(new.Q3>=current.Q3))|K>100){
-          phi.d  <-phi_test
-          break
+      }}else{
+        phi_inc<-as.numeric(ginv(dLp2[(q+1):(q+m20+1),(q+1):(q+m20+1)])%*%(c(dLp_phi)))
+        K<-0
+        repeat{
+          phi_test0<-as.numeric(phi.d-2^{-K}*phi_inc)
+          phi_test <-phi_test0-BP_H(para=phi_test0,m20 = m20,z.scaled = 0.5)
+          
+          new.Q3<-Q3_beta_phi(par = c(beta.d,phi_test), q=q, W=W, m20=m20, n=n, Eu=Eu, Nd=Nd, 
+                              cumhaz.d=cumhaz.d, SI2.scaled=SI2.scaled, Rset=Rset)
+          
+          if((is.finite(new.Q3)&(new.Q3>=current.Q3))|K>100){
+            phi.d  <-phi_test
+            break
+          }
+          K<-K+1
         }
-        K<-K+1
       }
-    }
     
     #E-step
     GSI <-Logit(BP_G(para = psi.d,m10 = m10,x.scaled = SI1.scaled))
@@ -356,8 +356,8 @@ EM<-function(psi.d, phi.d, cumhaz.d, alpha.d, beta.d, gamma.d, p, q, r, X, W, Z,
   return(list(like=like,times=times,cumhaz.h=cumhaz.d, psi.h=psi.d, phi.h=phi.d, alpha.h=alpha.d, beta.h=beta.d, gamma.h=gamma.d,conv=conv))
 }
 
-PLScureEST<-function(X,W,Z,Yi,cen,C1=3,C2=3,M2=1:5,tol=10^{-4},attempt=1,SE_est=TRUE,TRACE=FALSE){
-  M1<-C1*floor(length(cen)^{1/4})
+PLScureEST<-function(X,W,Z,Yi,cen,K1=3,K2=3,M2=1:5,tolerance=10^{-4},attempt=10,SE_est=TRUE,TRACE=FALSE){
+  M1<-K1*floor(length(cen)^{1/4})
   
   X<-data.frame(scale(X))
   W<-data.frame(scale(W))
@@ -390,8 +390,6 @@ PLScureEST<-function(X,W,Z,Yi,cen,C1=3,C2=3,M2=1:5,tol=10^{-4},attempt=1,SE_est=
     for(m20 in M2){
       l<-S<-0; discard<-0
       repeat{
-        #start_time <- Sys.time()
-        if(TRACE==TRUE){print(paste0("m10: ", m10,", m20: ", m20, ", Attempt: ", S+1))}
         set.seed(m10*100+m20*10+l)
         N_a<-rnorm(n = p,0,1)
         N_g<-rnorm(n = r,0,1); N_g[1]<-abs(N_g[1])
@@ -405,7 +403,7 @@ PLScureEST<-function(X,W,Z,Yi,cen,C1=3,C2=3,M2=1:5,tol=10^{-4},attempt=1,SE_est=
         
         EMstore<-EM(psi.d = psi0, phi.d = rep(0,m20+1), cumhaz.d = cumsum(ifelse(cen==1,1/sum(cen),0)), alpha.d = true.alpha,
                     beta.d = true.beta, gamma.d = true.gamma, p = p, q = q, r = r, X = X, W = W, Z = Z, m10 = m10, m20 = m20, n=n,
-                    Rset=Rset, Xmin = Xmin, Xmax = Xmax, Zmin = Zmin, Zmax = Zmax, cen = cen,Yi = Yi, maxT = maxT, NPupdate=FALSE, tol=tol)
+                    Rset=Rset, Xmin = Xmin, Xmax = Xmax, Zmin = Zmin, Zmax = Zmax, cen = cen,Yi = Yi, maxT = maxT, NPupdate=FALSE, tol=tolerance)
         
         aa<-c(m10,m20,S,sum(EMstore$like),
               EMstore$times,EMstore$cumhaz.h,EMstore$psi.h,rep(NA,max(M1)-m10),EMstore$phi.h,rep(NA,max(M2)-m20),
@@ -413,9 +411,9 @@ PLScureEST<-function(X,W,Z,Yi,cen,C1=3,C2=3,M2=1:5,tol=10^{-4},attempt=1,SE_est=
         
         if(EMstore$conv==1){discard<-discard+1}
         if(EMstore$conv==0){
+          if(TRACE==TRUE){print(paste0("m10: ", m10,", m20: ", m20, ", Attempt: ", S+1))}
           store.full<-rbind(store.full,c(aa,discard))
           S<-S+1
-          #print(floor(Sys.time()-start_time))
         }
         l<-l+1
         if(S==attempt){break}
@@ -443,11 +441,33 @@ PLScureEST<-function(X,W,Z,Yi,cen,C1=3,C2=3,M2=1:5,tol=10^{-4},attempt=1,SE_est=
   
   point.Euclidean<-c(alpha.d,beta.d,gamma.d)
   
+  grid<-1000
+  XX  <-seq(Xmin,Xmax, length.out = grid)
+  ZZ  <-seq(Zmin,Zmax, length.out = grid)
+  SI1.scaled<-(XX-Xmin)/(Xmax-Xmin)
+  SI2.scaled<-(ZZ-Zmin)/(Zmax-Zmin)
+  
+  G.matrix<-numeric(grid)
+  for(j in c(1:grid)){G.matrix[j]<-Logit(BP_G(para = psi.d,m10 = m10,x.scaled = SI1.scaled[j]))}
+  plot(x = XX, y = G.matrix,xlim=c(Xmin,Xmax),ylim=c(-0.05,1),main="Uncured probabiltiy", type="l", ylab="", xlab="")
+  title(ylab = expression(paste(hat(pi),"(",alpha^"T","X)")), line = 2.5, cex.lab = 1)
+  title(xlab = expression(paste(alpha^"T","X")), line = 2.5, cex.lab = 1)
+  points(x = X%*%alpha.d, y = rep(-0.05,length(X%*%alpha.d)),pch="|",cex=0.6)
+  
+  H.matrix<-numeric(grid)
+  for(j in c(1:grid)){H.matrix[j]<-BP_H(para = phi.d, m20 = m20, z.scaled = SI2.scaled[j])}
+  plot(x = ZZ, y = H.matrix,type="l",xlim=c(Zmin,Zmax),ylim=c(min(H.matrix)-0.05,max(H.matrix)), ylab="", xlab="",main="H-function")
+  title(ylab = expression(paste(hat("H"),"(",gamma^"T","Z)")), line = 2.5, cex.lab = 1)
+  title(xlab = expression(paste(gamma^"T","Z")), line = 2.5, cex.lab = 1)
+  points(x = Z%*%gamma.d, y = rep(min(H.matrix)-0.05,length(Z%*%gamma.d)),pch="|",cex=0.6)
+  
   if(SE_est==FALSE){
-    return(list(alpha=as.numeric(alpha.d), beta=as.numeric(beta.d), gamma=as.numeric(gamma.d),
-                m10=m10, m20=m20, Xmax=Xmax, Xmin=Xmin, Zmax=Zmax, Zmin=Zmin,
-                psi=psi.d, phi=phi.d, Lambda=as.numeric(cumhaz.d),
-                likelihood=like.star, AIC=-2*like.star+2*(length(point.Euclidean)+m10+m20+2)))
+    return(list(alpha=as.numeric(alpha.d), beta=as.numeric(beta.d), gamma=as.numeric(gamma.d), 
+                psi=c(psi.d[1],psi.d[1]+cumsum(exp(psi.d[2:(m10+1)]))), phi=phi.d,
+                m10.star=m10, m20.star=m20, Xmax=Xmax, Zmax=Zmax,
+                likelihood=like.star, AIC=-2*like.star+2*(length(point.Euclidean)+m10+m20+2),
+                AIC.by.m10.m20=ddply(store.case,m10~m20,summarize,AIC=min(AICs)) ))
+    
   }else if(SE_est==TRUE){
     grad.old<-replicate(obs.like(psi = psi.d, phi = phi.d, gamma = gamma.d,cumhaz = cumhaz.d, 
                                  alpha = alpha.d, beta = beta.d,X=X, W=W, Z=Z, m10=m10, m20=m20,p=p,q=q,r=r,
@@ -455,8 +475,8 @@ PLScureEST<-function(X,W,Z,Yi,cen,C1=3,C2=3,M2=1:5,tol=10^{-4},attempt=1,SE_est=
     
     aI         <-which.max(abs(alpha.d))
     grad.new   <-matrix(0,nrow = n,ncol = (p-1)+q+(r-1))
-    C2n        <-C2*n^{-1/2}
-    hn         <-c(pmin(C2n, abs(alpha.d[-aI])), rep(C2n,q), pmin(C2n, abs(gamma.d[-1])))
+    K2n        <-K2*n^{-1/2}
+    hn         <-c(pmin(K2n, abs(alpha.d[-aI])), rep(K2n,q), pmin(K2n, abs(gamma.d[-1])))
     eu.sign    <-c(-sign(alpha.d[-aI]),rep(1,q),-sign(gamma.d[-1]))
     
     for(I in c(1:(p-1+q+r-1))){
@@ -469,7 +489,7 @@ PLScureEST<-function(X,W,Z,Yi,cen,C1=3,C2=3,M2=1:5,tol=10^{-4},attempt=1,SE_est=
       
       EMstore<-EM(psi.d = psi.d, phi.d = phi.d, cumhaz.d = cumhaz.d, alpha.d = perb.alpha, 
                   beta.d = perb.beta, gamma.d = perb.gamma, p=p, q=q, r=r, X = X,W = W,Z = Z,m10 = m10,m20 = m20, n=n,
-                  Rset=Rset, Xmin = Xmin,Xmax = Xmax,Zmin = Zmin,Zmax = Zmax,cen = cen,Yi = Yi,maxT = maxT, NPupdate=TRUE, tol=tol)
+                  Rset=Rset, Xmin = Xmin,Xmax = Xmax,Zmin = Zmin,Zmax = Zmax,cen = cen,Yi = Yi,maxT = maxT, NPupdate=TRUE, tol=tolerance)
       
       grad.new[,I]<-EMstore$like
     }
@@ -495,25 +515,6 @@ PLScureEST<-function(X,W,Z,Yi,cen,C1=3,C2=3,M2=1:5,tol=10^{-4},attempt=1,SE_est=
       sd.gamma.r<-sqrt(t(as.vector(gamma.d[-1]/gamma.d[1]))%*%var.est[c((p+q):(p+q+r-2)),c((p+q):(p+q+r-2))]%*%t(t(as.vector(gamma.d[-1]/gamma.d[1]))))
       SE.vector<-c(SE.vector,sd.gamma.r, se.est[c((p+q):(p+q+r-2))])
     }
-    
-    grid<-1000
-    XX  <-seq(Xmin,Xmax, length.out = grid)
-    ZZ  <-seq(Zmin,Zmax, length.out = grid)
-    SI1.scaled<-(XX-Xmin)/(Xmax-Xmin)
-    SI2.scaled<-(ZZ-Zmin)/(Zmax-Zmin)
-    
-    G.matrix<-numeric(grid)
-    for(j in c(1:grid)){G.matrix[j]<-Logit(BP_G(para = psi.d,m10 = m10,x.scaled = SI1.scaled[j]))}
-    plot(x = XX, y = G.matrix,xlim=c(Xmin,Xmax),ylim=c(0,1),main="Uncured probabiltiy", type="l", ylab="", xlab="")
-    title(ylab = expression(paste(hat(pi),"(",alpha^"T","X)")), line = 2.5, cex.lab = 1)
-    title(xlab = expression(paste(alpha^"T","X")), line = 2.5, cex.lab = 1)
-    
-    H.matrix<-numeric(grid)
-    for(j in c(1:grid)){H.matrix[j]<-BP_H(para = phi.d, m20 = m20, z.scaled = SI2.scaled[j])}
-    plot(x = ZZ, y = H.matrix,type="l",xlim=c(Zmin,Zmax), ylab="", xlab="",main="H-function")
-    title(ylab = expression(paste(hat("H"),"(",gamma^"T","Z)")), line = 2.5, cex.lab = 1)
-    title(xlab = expression(paste(gamma^"T","Z")), line = 2.5, cex.lab = 1)
-    
     CI.left   <-point.Euclidean-1.96*SE.vector
     CI.right  <-point.Euclidean+1.96*SE.vector
     
