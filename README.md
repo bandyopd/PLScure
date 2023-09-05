@@ -70,7 +70,7 @@ This function performs the semiparametric estimation methods of Lee and Wong (20
 Example:
 ```
 Data <- PLScureSIM(seed = 1234, n = 500, alpha = c(1,-1,1), beta = 0.5, gamma = c(1,-1), scen=2)
-Result <- PLScureEST(X = cbind(Data$X1,Data$X2,Data$X3), W=Data$X1, Z=cbind(Data$X2,Data$X3), Yi = Data$Yi, cen = Data$cen, C1 = 3, C2 = 3, M2 = 1:5, tol = 10^{-4}, attempt = 10, SE_est = TRUE)
+Result <- PLScureEST(X = cbind(Data$X1,Data$X2,Data$X3), W=Data$X1, Z=cbind(Data$X2,Data$X3), Yi = Data$Yi, cen = Data$cen, K1 = 3, K2 = 3, M2 = 1:5, tol = 10^{-4}, attempt = 10, SE_est = TRUE)
 Result
 
 # $summary
