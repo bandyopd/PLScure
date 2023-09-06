@@ -52,20 +52,21 @@ This data structure is as follows:
 <ins>**PLScureEST**</ins>
 
 ```
-PLScureEST(X, W, Z, Yi, cen, C1=3, C2=3, M2=1:5, tol=10^{-4}, attempt=10, SE_est=TRUE)
+PLScureEST(X, W, Z, Yi, cen, K1=3, K2=3, M2=1:5, tolerance=10^{-4}, attempt=10, SE_est=TRUE,TRACE=FALSE)
 ```
-This function performs the semiparametric estimation methods of Lee and Wong (2023+). The details of the arguments are as follows:
->- `data` is a data.frame object shown in the above, with columns `id`, `Ti`, `cen`, `X[1]`,...,`X[P]`, `Z`
->- `P` is the dimension of covariate X, which is also equal to the dimension of gamma0
->- `m` is the number of nodes used in the Gaussian quadrature rule for truncated normal distributions
->- `tolerance` is the stopping criterion for the EM algorithm, set to 10^{-3} by default
->- `gamma0` is a vector of constants of size `P` for the initial values of parameter gamma, set to be rep(0,P) by default (gamma0=NA)
->- `beta0` is a constant for the initial value of parameter beta, set to be 0 by default (beta0=NA)
->- `alpha10` is a constant for the initial value of parameter alpha1, set to be 0 by default (alpha10=NA)
->- `alpha20` is a constant for the initial value of parameter alpha2, set to be 0 by default (alpha20=NA)
->- `mu0` is a constant for the initial value of parameter mu, set to be median of `Z` in `data` by default (mu0=NA)
->- `sigma0` is a constant for the initial value of parameter sigma, set to be 2 by default (sigma0=NA)
->- `TRACE` is an option for tracking the converging path of the parameter estimation, set to be FALSE by default
+This function performs the semiparametric estimation methods of Lee et al. (2023+). The details of the arguments are as follows:
+>- `X` is an n times p dimensional matrix that contains the covariates included in the single index of the incidence component; each column vector will be standardized to mean 0 and variance 1
+>- `W` is a covariate matrix of n rows included in the latency component, with a linear effect on the log hazards
+>- `Z` is an n times r dimensional matrix that contains the covariates included in the single index of the latency component; each column vector will be standardized to mean 0 and variance 1
+>- `Yi` is a vector of observed event or censoring times
+>- `cen` is a vector of censoring indicator that takes 0 for censoring and 1 for events
+>- `C1`
+>- `C2`
+>- `M2`
+>- `tolerance` is the stopping criterion for the EM algorithm, set to 10^{-4} by default
+>- `attempt` is the number of random initializations of the parameter values used to perform the EM algorithm per each combination of `C1` and `M2`, set to be 10 by default
+>- `SE_est` is an option for computing the estimated standard error, set to be TRUE by default
+>- `TRACE` is an option for tracking the progress of the parameter estimation, set to be FALSE by default
 
 Example:
 ```
