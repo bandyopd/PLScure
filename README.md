@@ -55,18 +55,18 @@ This data structure is as follows:
 PLScureEST(X, W, Z, Yi, cen, K1=3, K2=3, M2=1:5, tolerance=10^{-4}, attempt=10, SE_est=TRUE,TRACE=FALSE)
 ```
 This function performs the semiparametric estimation methods of Lee et al. (2023+). The details of the arguments are as follows:
->- `X` is an n times p dimensional matrix that contains the covariates included in the single index of the incidence component; each column vector will be standardized to mean 0 and variance 1
->- `W` is a covariate matrix of n rows included in the latency component, with a linear effect on the log hazards
->- `Z` is an n times r dimensional matrix that contains the covariates included in the single index of the latency component; each column vector will be standardized to mean 0 and variance 1
+>- `X` is an n times p dimensional covariate matrix included in the single index of the incidence component; each column vector will be standardized to mean 0 and variance 1
+>- `W` is an n times q dimensional covariate matrix included in the latency component with a linear effect on the log hazards
+>- `Z` is an n times r dimensional covariate matrix included in the single index of the latency component; each column vector will be standardized to mean 0 and variance 1
 >- `Yi` is a vector of observed event or censoring times
 >- `cen` is a vector of censoring indicator that takes 0 for censoring and 1 for events
->- `C1`
->- `C2`
->- `M2`
+>- `K1` is the positive integer associated with m<sub>1</sub>, the number of basis functions used in approximating the `G` function, set to 3 by default
+>- `K2` is the positive integer associated with the perturbation constant in the profile likelihood approach for standard error estimation, set to 3 by default
+>- `M2` is potentially a vector of positive integers pertaining to the candidates for the search of the optimal value of m<sub>2</sub>, the number of basis functions used in approximating the `H` function, set to 1:5 by default
 >- `tolerance` is the stopping criterion for the EM algorithm, set to 10^{-4} by default
->- `attempt` is the number of random initializations of the parameter values used to perform the EM algorithm per each combination of `C1` and `M2`, set to be 10 by default
->- `SE_est` is an option for computing the estimated standard error, set to be TRUE by default
->- `TRACE` is an option for tracking the progress of the parameter estimation, set to be FALSE by default
+>- `attempt` is the number of random initializations of the parameter values used to perform the EM algorithm per each combination of `K1` and `M2`, set to 10 by default
+>- `SE_est` is an option for computing the estimated standard error, set to TRUE by default
+>- `TRACE` is an option for tracking the progress of the parameter estimation, set to FALSE by default
 
 Example:
 ```
