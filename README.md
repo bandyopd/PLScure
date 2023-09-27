@@ -28,7 +28,7 @@ This function generates a data set according to the model of the simulation stud
 Example:
 ```
 #This is the setting in Scenario III
-Data <- PLScureSIM(seed = 1234, n = 500, alpha = c(1,-1,1,-1), beta = c(0.5,-0.5), gamma = c(1,-1), scen=3)
+Data <- PLScureSIM(seed = 1234, n = 500, alpha = c(1,-1,1,-1), beta = c(0.5,-0.5), gamma = c(1,-1), scen = 3)
 head(Data)
 
 #   id        Yi cen X1         X2         X3         X4 cure
@@ -52,7 +52,7 @@ This data structure is as follows:
 <ins>**PLScureEST**</ins>
 
 ```
-PLScureEST(X, W, Z, Yi, cen, K1=3, K2=5, M2=1:5, tolerance=10^{-4}, attempt=10, SE_est=TRUE,TRACE=TRUE)
+PLScureEST(X, W, Z, Yi, cen, K1 = 3, K2 = 5, M2 = 1:5, tolerance = 10^{-4}, attempt = 10, SE_est = TRUE, TRACE = TRUE)
 ```
 This function performs the semiparametric estimation methods of Lee et al. (2023+). The details of the arguments are as follows:
 >- `X` is an n times p dimensional covariate matrix included in the single index of the incidence component; each column vector will be standardized to mean 0 and variance 1
@@ -70,8 +70,8 @@ This function performs the semiparametric estimation methods of Lee et al. (2023
 
 Example:
 ```
-Data <- PLScureSIM(seed = 1234, n = 500, alpha = c(1,-1,1,-1), beta = c(0.5,-0.5), gamma = c(1,-1), scen=3)
-Result <- PLScureEST(X = cbind(Data$X1,Data$X2,Data$X3,Data$X4), W = cbind(Data$X1,Data$X2), Z = cbind(Data$X3,Data$X4), Yi = Data$Yi, cen = Data$cen, K1 = 3, K2 = 5, M2 = 1:5, TRACE=TRUE)
+Data <- PLScureSIM(seed = 1234, n = 500, alpha = c(1,-1,1,-1), beta = c(0.5,-0.5), gamma = c(1,-1), scen = 3)
+Result <- PLScureEST(X = cbind(Data$X1,Data$X2,Data$X3,Data$X4), W = cbind(Data$X1,Data$X2), Z = cbind(Data$X3,Data$X4), Yi = Data$Yi, cen = Data$cen, K1 = 3, K2 = 5, M2 = 1:5, TRACE = TRUE)
 Result
 
 # $summary
