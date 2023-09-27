@@ -31,13 +31,13 @@ Example:
 Data <- PLScureSIM(seed = 1234, n = 500, alpha = c(1,-1,1,-1), beta = c(0.5,-0.5), gamma = c(1,-1), scen=3)
 head(Data)
 
-#  id         Yi cen         X1         X2         X3 cure
-#1  1 8.71373045   0 -1.2070657  0.2774292  1.0844412    1
-#2  2 1.50105375   1  0.5060559 -0.5747400 -0.5466319    0
-#3  3 0.13600808   1 -0.7315360 -0.5166697 -1.7507334    0
-#4  4 1.12204120   1  0.9594941 -0.1102855 -0.5110095    0
-#5  5 1.05116810   1 -0.6470190  0.8681809  0.3756356    0
-#6  6 0.04545912   0  0.4595894 -0.6937202 -1.4482049    0
+#   id        Yi cen X1         X2         X3         X4 cure
+# 1  1 1.6608376   0 -1  0.3115255  0.3143686  0.3592891    1
+# 2  2 1.5471023   1  1  0.5060559 -0.5747400 -0.5466319    0
+# 3  3 0.1586276   0 -1 -0.4771927 -0.9983864 -0.7762539    0
+# 4  4 1.0180577   1 -1 -0.5110095 -0.9111954 -0.8371717    0
+# 5  5 2.6545979   0  1 -0.4906859 -0.4405479  0.4595894    0
+# 6  6 0.1450663   0 -1  0.5747557 -1.0236557 -0.0151383    1
 ```
 
 This data structure is as follows:
@@ -45,8 +45,8 @@ This data structure is as follows:
 >- `Yi` is the exact failure time or censoring time
 >- `cen` is the right-censoring indicator
 >- `X1`, `X2`, `X3`, and `X4` are the covariates, where `X1` takes up the values -1 and 1 with equal probability, and `X2`, `X3` and `X4` are independent standard normal variables
->- `X1` and `X2` are included in covariate matrices `X` and `W`
->- `X3` and `X4` are included in covariate matrices `X` and `Z`
+>- `X1` and `X2` are included in covariate matrices `X` and `W` in the simulation setting
+>- `X3` and `X4` are included in covariate matrices `X` and `Z` in the simulation setting
 >- `cure` is the cure indicator, which is unobservable in real data analysis, hence not an input in the estimation function
 
 <ins>**PLScureEST**</ins>
