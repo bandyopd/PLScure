@@ -434,7 +434,7 @@ PLScureEST<-function(X,W,Z,Yi,cen,K1=3,K2=5,M2=1:5,tolerance=10^{-4},attempt=10,
   names(store.case)<-c("m10","m20","l","like","iteration",paste0("Lam",c(1:n)),
                        paste0("psi",c(1:(max(M1)+1))), paste0("phi",c(1:(max(M2)+1))),
                        paste0("alpha",c(1:p)),paste0("beta",c(1:q)),paste0("gamma",c(1:r)),"discard")
-  store.case$AICs<- -2*store.case$like+2*(store.case$m10+store.case$m20+p+q+r)
+  store.case$AICs<- -2*store.case$like+2*(store.case$m10+store.case$m20+p+q+r+2)
   
   selected<-which(store.case$AICs==min(store.case$AICs))[1]
   store.star<-as.matrix(store.case[selected,])
@@ -540,7 +540,7 @@ PLScureEST<-function(X,W,Z,Yi,cen,K1=3,K2=5,M2=1:5,tolerance=10^{-4},attempt=10,
                 gamma=as.numeric(gamma.d), gamma.se=as.numeric(SE.vector[(p+q+1):(p+q+r)]),
                 psi=c(psi.d[1],psi.d[1]+cumsum(exp(psi.d[2:(m10+1)]))), phi=phi.d,
                 m10.star=m10, m20.star=m20, Xmax=Xmax, Zmax=Zmax, 
-                likelihood=like.star, AIC=-2*like.star+2*(length(point.Euclidean)+m10+m20+2),
+                likelihood=like.star, AIC=min(store.case$AICs),
                 Pi=Pi.d, HgamZ=HgamZ.d, AIC.by.m10.m20=ddply(store.case,m10~m20,summarize,AIC=min(AICs)) ))
   }
 }
