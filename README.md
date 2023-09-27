@@ -5,7 +5,7 @@ nonparametric incidence link function) is a package that performs semiparametric
 # How to import the Functions #
 > install.packages("devtools")<br />
 > library(devtools) <br /> 
-> source_url("...?raw=TRUE")
+> source_url("https://github.com/lcyjames/PLScure/blob/main/PLScure.R?raw=TRUE")
 
 # Usage #
 The package contains 2 functions:
