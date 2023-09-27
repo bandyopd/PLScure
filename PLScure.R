@@ -541,6 +541,6 @@ PLScureEST<-function(X,W,Z,Yi,cen,K1=3,K2=5,M2=1:5,tolerance=10^{-4},attempt=10,
                 psi=c(psi.d[1],psi.d[1]+cumsum(exp(psi.d[2:(m10+1)]))), phi=phi.d,
                 m10.star=m10, m20.star=m20, Xmax=Xmax, Zmax=Zmax, 
                 likelihood=like.star, AIC=min(store.case$AICs),
-                Pi=Pi.d, HgamZ=HgamZ.d, AIC.by.m10.m20=ddply(store.case,m10~m20,summarize,AIC=min(AICs)) ))
+                Pi=Pi.d, HgammaZ=HgamZ.d, AIC.by.m10.m20=ddply(store.case,m10~m20,summarize,AIC=min(AICs)) ))
   }
 }
