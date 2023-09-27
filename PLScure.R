@@ -16,15 +16,17 @@ PLScureSIM<-function(seed=NA,n,alpha,beta,gamma,scen=1){
   data<-NULL
   
   for(i in c(1:n)){
-    X1<-rnorm(n = 1,mean = 0,sd = 1)
+    X1<-2*rbinom(n = 1,size = 1,prob = 0.5)-1
     X2<-rnorm(n = 1,mean = 0,sd = 1)
     X3<-rnorm(n = 1,mean = 0,sd = 1)
-    XX<-c(X1,X2,X3)
-    ZZ<-c(X2,X3)
+    X4<-rnorm(n = 1,mean = 0,sd = 1)
+    XX<-c(X1,X2,X3,X4)
+    ZZ<-c(X3,X4)
     
     SI1<-XX%*%balpha
     SI2<-ZZ%*%bgamma
     
+    #incidence link function
     if(scen==1){eta<-exp(SI1)/(1+exp(SI1))}
     if(scen==2){eta<-0.4+0.6*pnorm(2*SI1-1)}
     if(scen==3){eta<-0.5*pnorm(2*SI1+3)+0.5*pnorm(2*SI1-3)}
@@ -33,14 +35,14 @@ PLScureSIM<-function(seed=NA,n,alpha,beta,gamma,scen=1){
     
     Ci<-rexp(n = 1,rate = 0.2)
     if(uncured==0){
-      cure<-1
-      Ti  <-Inf
+      cure   <-1
+      Ti     <-Inf
     }else if(uncured==1){
-      cure<-0
-      St  <-runif(n = 1,min = 0,max = 1)
-      if(scen==1){Ti<-((-log(St))/exp(X1%*%beta+SI2)/0.8)^(1/1.2)}
-      if(scen==2){Ti<-((-log(St))/exp(X1%*%beta+log(1+SI2^2))/0.8)^(1/1.2)}
-      if(scen==3){Ti<-((-log(St))/exp(X1%*%beta+sin(3/2*SI2))/0.8)^(1/1.2)}
+      cure   <-0
+      St     <-runif(n = 1,min = 0,max = 1)
+      if(scen==1){Ti<-((-log(St))/exp(c(X1,X2)%*%beta+SI2)/0.8)^(1/1.2)}
+      if(scen==2){Ti<-((-log(St))/exp(c(X1,X2)%*%beta+log(1+SI2^2))/0.8)^(1/1.2)}
+      if(scen==3){Ti<-((-log(St))/exp(c(X1,X2)%*%beta+sin(3/2*SI2))/0.8)^(1/1.2)}
     }
     
     Yi<-min(Ti,Ci)
@@ -49,7 +51,7 @@ PLScureSIM<-function(seed=NA,n,alpha,beta,gamma,scen=1){
     data<-rbind(data,c(i,Yi,cen,XX,cure))
   }
   data<-data.frame(data)
-  names(data)<-c("id","Yi","cen","X1","X2","X3","cure")
+  names(data)<-c("id","Yi","cen","X1","X2","X3","X4","cure")
   return(data)
 }
 
@@ -353,10 +355,13 @@ EM<-function(psi.d, phi.d, cumhaz.d, alpha.d, beta.d, gamma.d, p, q, r, X, W, Z,
     if((NPupdate==FALSE)&(times>100)){conv<-0;break}
     if((NPupdate==TRUE)&(times>100)){conv<-0;break}
   }
-  return(list(like=like,times=times,cumhaz.h=cumhaz.d, psi.h=psi.d, phi.h=phi.d, alpha.h=alpha.d, beta.h=beta.d, gamma.h=gamma.d,conv=conv))
+  inc.prob<-cbind(SI1,GSI)
+  H.value <-cbind(SI2,HSI)
+  return(list(like=like,times=times,cumhaz.h=cumhaz.d, psi.h=psi.d, phi.h=phi.d,
+              alpha.h=alpha.d, beta.h=beta.d, gamma.h=gamma.d,conv=conv,Pi=inc.prob,HgamZ=H.value))
 }
 
-PLScureEST<-function(X,W,Z,Yi,cen,K1=3,K2=3,M2=1:5,tolerance=10^{-4},attempt=10,SE_est=TRUE,TRACE=FALSE){
+PLScureEST<-function(X,W,Z,Yi,cen,K1=3,K2=5,M2=1:5,tolerance=10^{-4},attempt=10,SE_est=TRUE,TRACE=FALSE){
   M1<-K1*floor(length(cen)^{1/4})
   
   X<-data.frame(scale(X))
@@ -386,10 +391,13 @@ PLScureEST<-function(X,W,Z,Yi,cen,K1=3,K2=3,M2=1:5,tolerance=10^{-4},attempt=10,
   
   ini<-0
   store.full<-c()
+  Pi.store<-HgamZ.store<-vector(mode = 'list', length = length(M1)*length(M2))
   for(m10 in M1){
     for(m20 in M2){
-      l<-S<-0; discard<-0
+      l<-S<-0; discard.old<-discard<-0
       repeat{
+        if((TRACE==TRUE)&(discard.old==discard)){print(paste0("m10: ", m10,", m20: ", m20, ", Attempt: ", S+1))}
+        discard.old<-discard
         set.seed(m10*100+m20*10+l)
         N_a<-rnorm(n = p,0,1)
         N_g<-rnorm(n = r,0,1); N_g[1]<-abs(N_g[1])
@@ -397,7 +405,6 @@ PLScureEST<-function(X,W,Z,Yi,cen,K1=3,K2=3,M2=1:5,tolerance=10^{-4},attempt=10,
         true.beta <-rep(0,q)
         true.gamma<-N_g/sqrt(sum(N_g^2))
         
-        ini<-ini+1
         SI.ini<-seq(0,1,length.out=12)[2:11]
         psi0 <-optim(par = rep(0,m10+1),fn = ini.psi, m10=m10, method = "BFGS",SI1.scaled=SI.ini,control = list(reltol=10^{-4},maxit=1000))$par
         
@@ -411,7 +418,9 @@ PLScureEST<-function(X,W,Z,Yi,cen,K1=3,K2=3,M2=1:5,tolerance=10^{-4},attempt=10,
         
         if(EMstore$conv==1){discard<-discard+1}
         if(EMstore$conv==0){
-          if(TRACE==TRUE){print(paste0("m10: ", m10,", m20: ", m20, ", Attempt: ", S+1))}
+           ini<-ini+1
+          Pi.store[[ini]]<-EMstore$Pi
+          HgamZ.store[[ini]]<-EMstore$HgamZ
           store.full<-rbind(store.full,c(aa,discard))
           S<-S+1
         }
@@ -427,7 +436,8 @@ PLScureEST<-function(X,W,Z,Yi,cen,K1=3,K2=3,M2=1:5,tolerance=10^{-4},attempt=10,
                        paste0("alpha",c(1:p)),paste0("beta",c(1:q)),paste0("gamma",c(1:r)),"discard")
   store.case$AICs<- -2*store.case$like+2*(store.case$m10+store.case$m20+p+q+r)
   
-  store.star<-as.matrix(store.case[which(store.case$AICs==min(store.case$AICs)),])
+  selected<-which(store.case$AICs==min(store.case$AICs))[1]
+  store.star<-as.matrix(store.case[selected,])
   m10       <-store.star[1]
   m20       <-store.star[2]
   like.star <-store.star[4]
@@ -438,6 +448,10 @@ PLScureEST<-function(X,W,Z,Yi,cen,K1=3,K2=3,M2=1:5,tolerance=10^{-4},attempt=10,
   alpha.d   <-store.star[(n+5+max(M1)+max(M2)+3):(n+5+max(M1)+max(M2)+p+2)]
   beta.d    <-store.star[(n+5+max(M1)+max(M2)+p+3):(n+5+max(M1)+max(M2)+p+q+2)]
   gamma.d   <-store.star[(n+5+max(M1)+max(M2)+p+q+3):(n+5+max(M1)+max(M2)+p+q+r+2)]
+  Pi.d      <-as.data.frame(Pi.store[[selected]])
+  HgamZ.d   <-as.data.frame(HgamZ.store[[selected]])
+  names(Pi.d)   <-c("alphaX","P(U=1)")
+  names(HgamZ.d)<-c("gammaZ","H(gammaZ)")
   
   point.Euclidean<-c(alpha.d,beta.d,gamma.d)
   
@@ -466,7 +480,7 @@ PLScureEST<-function(X,W,Z,Yi,cen,K1=3,K2=3,M2=1:5,tolerance=10^{-4},attempt=10,
                 psi=c(psi.d[1],psi.d[1]+cumsum(exp(psi.d[2:(m10+1)]))), phi=phi.d,
                 m10.star=m10, m20.star=m20, Xmax=Xmax, Zmax=Zmax,
                 likelihood=like.star, AIC=-2*like.star+2*(length(point.Euclidean)+m10+m20+2),
-                AIC.by.m10.m20=ddply(store.case,m10~m20,summarize,AIC=min(AICs)) ))
+                Pi=Pi.d, HgamZ=HgamZ.d, AIC.by.m10.m20=ddply(store.case,m10~m20,summarize,AIC=min(AICs)) ))
     
   }else if(SE_est==TRUE){
     grad.old<-replicate(obs.like(psi = psi.d, phi = phi.d, gamma = gamma.d,cumhaz = cumhaz.d, 
@@ -525,8 +539,8 @@ PLScureEST<-function(X,W,Z,Yi,cen,K1=3,K2=3,M2=1:5,tolerance=10^{-4},attempt=10,
                 beta=as.numeric(beta.d), beta.se=as.numeric(SE.vector[(p+1):(p+q)]),
                 gamma=as.numeric(gamma.d), gamma.se=as.numeric(SE.vector[(p+q+1):(p+q+r)]),
                 psi=c(psi.d[1],psi.d[1]+cumsum(exp(psi.d[2:(m10+1)]))), phi=phi.d,
-                m10.star=m10, m20.star=m20, Xmax=Xmax, Zmax=Zmax,
+                m10.star=m10, m20.star=m20, Xmax=Xmax, Zmax=Zmax, 
                 likelihood=like.star, AIC=-2*like.star+2*(length(point.Euclidean)+m10+m20+2),
-                AIC.by.m10.m20=ddply(store.case,m10~m20,summarize,AIC=min(AICs)) ))
+                Pi=Pi.d, HgamZ=HgamZ.d, AIC.by.m10.m20=ddply(store.case,m10~m20,summarize,AIC=min(AICs)) ))
   }
 }
