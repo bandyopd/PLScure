@@ -66,12 +66,12 @@ This function performs the semiparametric estimation methods of Lee et al. (2023
 >- `tolerance` is the stopping criterion for the EM algorithm, set to 10^{-4} by default
 >- `attempt` is the number of random initializations of the parameter values used to perform the EM algorithm per each combination of `K1` and `M2`, set to 10 by default
 >- `SE_est` is an option for computing the estimated standard error, set to TRUE by default
->- `TRACE` is an option for tracking the progress of the parameter estimation, set to FALSE by default
+>- `TRACE` is an option for tracking the progress of the parameter estimation, set to TRUE by default
 
 Example:
 ```
-Data <- PLScureSIM(seed = 1234, n = 500, alpha = c(1,-1,1), beta = 0.5, gamma = c(1,-1), scen=2)
-Result <- PLScureEST(X = cbind(Data$X1,Data$X2,Data$X3), W=Data$X1, Z=cbind(Data$X2,Data$X3), Yi = Data$Yi, cen = Data$cen, K1 = 3, K2 = 3, M2 = 1:5, tol = 10^{-4}, attempt = 10, SE_est = TRUE)
+Data <- PLScureSIM(seed = 1234, n = 500, alpha = c(1,-1,1,-1), beta = c(0.5,-0.5), gamma = c(1,-1), scen=3)
+Result <- PLScureEST(X = cbind(Data$X1,Data$X2,Data$X3,Data$X4), W = cbind(Data$X1,Data$X2), Z = cbind(Data$X3,Data$X4), Yi = Data$Yi, cen = Data$cen, K1 = 3, K2 = 5, M2 = 1:5, TRACE=TRUE)
 Result
 
 # $summary
