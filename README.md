@@ -28,7 +28,7 @@ This function generates a data set according to the model of the simulation stud
 Example:
 ```
 #This is the setting in Scenario III
-Data <- PLScureSIM(seed = 1234, n = 500, alpha = c(1,-1,1), beta = 0.5, gamma = c(1,-1), scen=3)
+Data <- PLScureSIM(seed = 1234, n = 500, alpha = c(1,-1,1,-1), beta = c(0.5,-0.5), gamma = c(1,-1), scen=3)
 head(Data)
 
 #  id         Yi cen         X1         X2         X3 cure
@@ -44,9 +44,9 @@ This data structure is as follows:
 >- `id` is the sample identifier
 >- `Yi` is the exact failure time or censoring time
 >- `cen` is the right-censoring indicator
->- `X1`, `X2`, and `X3` are the covariates, where each of them follows a standard normal distribution
->- `X1` is included in X and W
->- `X2` and `X3` are included in X and Z
+>- `X1`, `X2`, `X3`, and `X4` are the covariates, where `X1` takes up the values -1 and 1 with equal probability, and `X2`, `X3` and `X4` are independent standard normal variables
+>- `X1` and `X2` are included in covariate matrices `X` and `W`
+>- `X3` and `X4` are included in covariate matrices `X` and `Z`
 >- `cure` is the cure indicator, which is unobservable in real data analysis, hence not an input in the estimation function
 
 <ins>**PLScureEST**</ins>
