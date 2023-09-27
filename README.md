@@ -27,8 +27,8 @@ This function generates a data set according to the model of the simulation stud
 
 Example:
 ```
-#This is the setting in Scenario II
-Data <- PLScureSIM(seed = 1234, n = 500, alpha = c(1,-1,1), beta = 0.5, gamma = c(1,-1), scen=2)
+#This is the setting in Scenario III
+Data <- PLScureSIM(seed = 1234, n = 500, alpha = c(1,-1,1), beta = 0.5, gamma = c(1,-1), scen=3)
 head(Data)
 
 #  id         Yi cen         X1         X2         X3 cure
