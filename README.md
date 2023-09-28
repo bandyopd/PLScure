@@ -20,9 +20,9 @@ PLScureSIM(seed=NA, n, alpha, beta, gamma, scen)
 ```
 This function generates a data set according to the model of the simulation study in Lee et al. (2023+) that takes the arguments:
 >- `n` is the sample size
->- `alpha` is the regression coefficient of X in the incidence component. If the Euclidean norm of this vector is not equal to 1, then the vector will be rescaled to norm 1.
->- `beta` is the regression coefficient of W
->- `gamma` is the regression coefficient of Z in the latency component. If the Euclidean norm of this vector is not equal to 1, then the vector will be rescaled to norm 1.
+>- `alpha` is the regression coefficient of `X` in the incidence component. If the Euclidean norm of this vector is not equal to 1, then the vector will be rescaled to norm 1.
+>- `beta` is the regression coefficient of `W` in the latency component
+>- `gamma` is the regression coefficient of `Z` in the latency component. If the Euclidean norm of this vector is not equal to 1, then the vector will be rescaled to norm 1.
 >- `scen` is the setting used in the scenarios in the simulation study, which takes the values 1, 2, or 3 referring to Scenarios I, II, and III.
 
 Example:
@@ -60,9 +60,9 @@ This function performs the semiparametric estimation methods of Lee et al. (2023
 >- `Z` is an n times r dimensional covariate matrix included in the single index of the latency component; each column vector will be standardized to mean 0 and variance 1
 >- `Yi` is a vector of observed event or censoring times
 >- `cen` is a vector of censoring indicator that takes 0 for censoring and 1 for events
->- `K1` is the positive integer associated with m<sub>1</sub>, the number of basis functions used in approximating the `G` function, set to 3 by default
->- `K2` is the positive integer associated with the perturbation constant in the profile likelihood approach for the estimation of the standard error of parameter estimates, set to 5 by default
->- `M2` is potentially a vector of positive integers pertaining to the candidates for the search of the optimal value of m<sub>2</sub>, the number of basis functions used in approximating the `H` function, set to 1:5 by default
+>- `K1` is the positive integer associated with m<sub>1</sub>, the number of basis functions used to approximate the `G` function, set to 3 by default
+>- `K2` is the positive integer associated with the perturbation constant in the profile likelihood approach for the estimation of the standard error of Euclidean parameter estimates, set to 5 by default
+>- `M2` is a vector of positive integers pertaining to the candidates for the search of the optimal value of m<sub>2</sub>, the number of basis functions used to approximate the `H` function, using AIC, set to 1:5 by default
 >- `tolerance` is the stopping criterion for the EM algorithm, set to 10^{-4} by default
 >- `attempt` is the number of random initializations of the parameter values used to perform the EM algorithm per each combination of `K1` and `M2`, set to 10 by default
 >- `SE_est` is an option for computing the estimated standard error, set to TRUE by default
@@ -71,7 +71,8 @@ This function performs the semiparametric estimation methods of Lee et al. (2023
 Example:
 ```
 Data <- PLScureSIM(seed = 1234, n = 500, alpha = c(1,-1,1,-1), beta = c(0.5,-0.5), gamma = c(1,-1), scen = 3)
-Result <- PLScureEST(X = cbind(Data$X1,Data$X2,Data$X3,Data$X4), W = cbind(Data$X1,Data$X2), Z = cbind(Data$X3,Data$X4), Yi = Data$Yi, cen = Data$cen, K1 = 3, K2 = 5, M2 = 1:5, TRACE = TRUE)
+Result <- PLScureEST(X = cbind(Data$X1,Data$X2,Data$X3,Data$X4), W = cbind(Data$X1,Data$X2), Z = cbind(Data$X3,Data$X4),
+                     Yi = Data$Yi, cen = Data$cen, K1 = 3, K2 = 5, M2 = 1:5, TRACE = TRUE)
 Result
 
 # $summary
