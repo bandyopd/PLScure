@@ -88,7 +88,7 @@ obs.like<-function(psi, phi, cumhaz, alpha, beta, gamma, X, W, Z, p, q, r, m10, 
   
   lambda<-c(cumhaz[1],diff(cumhaz))
   
-  return(ifelse(cen==1,(log(GSI)+log(lambda)+betaW+HSI-cumhaz*exp(betaW+HSI)), #log(1-GSI+GSI*exp(-cumhaz*exp(betaW+HSI)))))
+  return(ifelse(cen==1,(log(GSI)+log(lambda)+betaW+HSI-cumhaz*exp(betaW+HSI)),
                 ifelse(Yi>maxT,log(1-GSI),log(1-GSI+GSI*exp(-cumhaz*exp(betaW+HSI))))))
 }
 
@@ -96,7 +96,7 @@ ini.psi<-function(par, SI1.scaled, m10){sum((Logit(BP_G(para = par[1:(m10+1)],m1
 
 Q1_psi<-function(par, Eu, m10, SI1.scaled){
   GI<-BP_G(para = par,m10 = m10,x.scaled = SI1.scaled)
-  -sum(Eu*GI-log(1+exp(GI))) #check to be correct
+  -sum(Eu*GI-log(1+exp(GI)))
 }
 
 Q3_beta_phi<-function(par, q, m20, W, n, Eu, Nd, cumhaz.d, SI2.scaled, Rset){
@@ -154,12 +154,12 @@ EM<-function(psi.d, phi.d, cumhaz.d, alpha.d, beta.d, gamma.d, p, q, r, X, W, Z,
         
         GSI.prime<-sapply(c(1:n), function(i){m10*sum(psi.star*sapply(c(0:m10),function(j){
           ifelse(choose(m10-1,j-1)==0,0,choose(m10-1,j-1)*(SI1.scaled[i])^(j-1)*(1-SI1.scaled[i])^(m10-j))-
-            ifelse(choose(m10-1,j)==0,0,choose(m10-1,j)*(SI1.scaled[i])^j*(1-SI1.scaled[i])^(m10-1-j))}))}) #checked to be correct
+            ifelse(choose(m10-1,j)==0,0,choose(m10-1,j)*(SI1.scaled[i])^j*(1-SI1.scaled[i])^(m10-1-j))}))})
         
         GSI.double.prime<-sapply(c(1:n), function(i){m10*(m10-1)*sum(psi.star*sapply(c(0:m10),function(j){
           ifelse(choose(m10-2,j-2)==0,0,choose(m10-2,j-2)*(SI1.scaled[i])^(j-2)*(1-SI1.scaled[i])^(m10-j))-
             2*ifelse(choose(m10-2,j-1)==0,0,choose(m10-2,j-1)*(SI1.scaled[i])^(j-1)*(1-SI1.scaled[i])^(m10-2-(j-1)))+
-            ifelse(choose(m10-2,j)==0,0,choose(m10-2,j)*(SI1.scaled[i])^j*(1-SI1.scaled[i])^(m10-2-j))}))}) #checked to be correct
+            ifelse(choose(m10-2,j)==0,0,choose(m10-2,j)*(SI1.scaled[i])^j*(1-SI1.scaled[i])^(m10-2-j))}))})
         
         dQ1a<-as.numeric(sapply(c(1:p), function(o){(Xmax-Xmin)^{-1}*sum(GSI.prime*X[,o]*(Eu-GSI))}))
         
