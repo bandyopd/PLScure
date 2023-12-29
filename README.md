@@ -1,5 +1,5 @@
 # PLScure
-PLScure (which stands for <ins>**Partly Linear Single-Index cure**</ins> models with a
+PLScure (which stands for <ins>**Partly Linear Single-index Cure**</ins> models with a
 nonparametric, monotone increasing incidence link function) is a package that performs semiparametric estimation and inference for right-censored data using the method proposed by Lee et al. (2023+).
 
 # How to import the Functions #
