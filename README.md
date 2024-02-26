@@ -1,6 +1,6 @@
 # PLScure
 PLScure (which stands for <ins>**Partly Linear Single-index Cure**</ins> models with a
-nonparametric, monotone increasing incidence link function) is a package that performs semiparametric estimation and inference for right-censored data using the method proposed by Lee et al. (2023+).
+nonparametric, monotone increasing incidence link function) is a package that performs semiparametric estimation and inference for right-censored data using the method proposed by Lee et al. (2024).
 
 # How to import the Functions #
 > install.packages("devtools")<br />
@@ -143,4 +143,4 @@ Result
 Lee Chun Yin, James <<james-chun-yin.lee@polyu.edu.hk>>
 
 # Reference #
-Lee, C. Y., Wong, K. Y., and Bandyopadhyay D. (2023+). Partly-linear single-index cure models with a nonparametric incidence link function. (Under review)
+Lee, C. Y., Wong, K. Y., and Bandyopadhyay D. (2024). Partly-linear single-index cure models with a nonparametric incidence link function. Statistical Methods in Medical Research [online], DOI:  [10.1177/09622802241227960](https://doi.org/10.1177/09622802241227960).
