@@ -11,14 +11,14 @@ nonparametric, monotone increasing incidence link function) is a package that pe
 The package contains 2 functions:
 |Functions  | Description|
 |------------- | -------------|
-PLScureSIM  | Generate a data set according to the simulation study in Lee et al. (2023+)
-PLScureEST  | Perform the semiparametric estimation methods of Lee et al. (2023+)
+PLScureSIM  | Generate a data set according to the simulation study in Lee et al. (2024)
+PLScureEST  | Perform the semiparametric estimation methods of Lee et al. (2024)
 
 <ins>**PLScureSIM**</ins>
 ```
 PLScureSIM(seed=NA, n, alpha, beta, gamma, scen)
 ```
-This function generates a data set according to the model of the simulation study in Lee et al. (2023+) that takes the arguments:
+This function generates a data set according to the model of the simulation study in Lee et al. (2024) that takes the arguments:
 >- `n` is the sample size
 >- `alpha` is the regression coefficient of `X` in the incidence component. If the Euclidean norm of this vector is not equal to 1, then the vector will be rescaled to norm 1.
 >- `beta` is the regression coefficient of `W` in the latency component
@@ -54,7 +54,7 @@ This data structure is as follows:
 ```
 PLScureEST(X, W, Z, Yi, cen, K1 = 3, K2 = 5, M2 = 1:5, tolerance = 10^{-4}, attempt = 10, SE_est = TRUE, TRACE = TRUE)
 ```
-This function performs the semiparametric estimation methods of Lee et al. (2023+). The details of the arguments are as follows:
+This function performs the semiparametric estimation methods of Lee et al. (2024). The details of the arguments are as follows:
 >- `X` is an n times p dimensional covariate matrix included in the single index of the incidence component; each column vector will be standardized to mean 0 and variance 1
 >- `W` is an n times q dimensional covariate matrix included in the latency component with a linear effect on the log hazards
 >- `Z` is an n times r dimensional covariate matrix included in the single index of the latency component; each column vector will be standardized to mean 0 and variance 1
