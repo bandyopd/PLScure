@@ -143,4 +143,4 @@ Result
 Lee Chun Yin, James <<james-chun-yin.lee@polyu.edu.hk>>
 
 # Reference #
-Lee, C. Y., Wong, K. Y., and Bandyopadhyay D. (2024). Partly-linear single-index cure models with a nonparametric incidence link function. Statistical Methods in Medical Research [online], DOI:  [10.1177/09622802241227960](https://doi.org/10.1177/09622802241227960).
+Lee C-Y, Wong KY and Bandyopadhyay D (2024). Partly linear single-index cure models with a nonparametric incidence link function, *Statistical Methods in Medical Research*, 33(3), 498-514; DOI:  [10.1177/09622802241227960](https://doi.org/10.1177/09622802241227960).
